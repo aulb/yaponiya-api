@@ -56,8 +56,9 @@ const createResultObject = (results, key) => {
 const checkMongoForValue = (key, operation) => {
   return new Promise((resolve) => {
     // Bandaid fix for nonexistent keys
-    if (operation === operations.findStroke &&
-        Object.keys(mongoQuery).indexOf(key) < 0) {
+    const isFindingOrder = operation === operations.findOrder;
+    const isValidOrder = !Object.keys(mongoQuery).indexOf(key) < 0;
+    if (isFindingOrder && !isValidOrder) {
       resolve(null);
       return;
     }
