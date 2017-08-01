@@ -1,0 +1,6 @@
+.DS_Store
+.ftpconfig
+
+node_modules
+kanji*
+twitter-config.js
