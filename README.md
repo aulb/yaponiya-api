@@ -5,15 +5,27 @@ There are three scripts used in modern Japanese language, hiragana and katakana 
 
 There are three simple GET APIs implemented for this project (under 'app.js'). In addition, a streaming API proxy from Twitter (under 'app-stream.js') is also implemented for the realtime part of this webapp. The APIs are RESTfully named and implemented using express.js, mongodb, and redis.
 
+# Files of Interest
+## /controllers/api.js
+The code for serving the three GET APIs.
+
+## /controllers/utils/mongo-utils.js
+The code for grabbing and parsing data from mongodb.
+
+## /controllers/utils/svg-utils.js
+The code for opening and parsing SVG files. The files are grabbed from kanjivg.tagaini.net.
+
 # API
 ## /api/kanji/:kanji 
 Returns information about a specific kanji. If specified character is not a kanji returns nothing and 404. More information of how the json schema look like at 'schema/kanji-schema.json'.
 
 *Example*
 % `curl http://yaponiya.reblws.me:5000/api/kanji/明`
+
 `{"id":2664,"reading":{"nanori":["あきら","あけ","あす","きら","け","さや","さやか","とし","はる","み","め"],...}`
 
 % `curl http://yaponiya.reblws.me:5000/api/kanji/test`
+
 `{}`
 
 ## /api/order/:type
@@ -21,13 +33,15 @@ Returns the ordering for Japanese kanjis based on :type. Valid types are `jlpt`,
 
 *Example*
 % `curl http://yaponiya.reblws.me:5000/api/order/jlpt`
+
 `{"亜":1,"阿":1,"哀":1,"愛":2,"葵":1,"茜":1,"悪":3,"握":1,"渥":1,"旭":1,"梓":1,"圧":2,"扱":1,"絢":1,"綾":1,"鮎":1,"安":4,"暗":3...}`
 
 ## /api/stroke/:kanji
-Returns the stroke order for a specified kanji, hiragana, or katakana (Japanese scripts).
+Returns the stroke order (SVG in XML format) for a specified kanji, hiragana, or katakana (Japanese scripts). The API needs to open the SVG file to access the data. 
 
 *Example*
 % `curl http://yaponiya.reblws.me:5000/api/stroke/明`
+
 `<?xml version="1.0" encoding="UTF-8" standalone="yes"?><svg xmlns="http://www.w3.org/2000/svg" width="109" height="109" viewBox="0 0 109 109"><g id="kvg:StrokePaths_06642" ...>`
 
 

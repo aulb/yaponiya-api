@@ -1,4 +1,9 @@
-// https://www.google.ca/url?sa=t&rct=j&q=&esrc=s&source=web&cd=8&cad=rja&uact=8&ved=0ahUKEwiFqs-v5qrVAhWMJ8AKHV_cCEoQFghXMAc&url=https%3A%2F%2Fblog.yld.io%2F2016%2F11%2F07%2Fnode-js-databases-using-redis-for-fun-and-profit%2F&usg=AFQjCNHnlDg69EgzaGrYg3L_X8ppSwiUZQ
+/*
+ * This file contains all the necessary utilities to open and read SVG files. 
+ * Used primarily for /api/stroke/:kanji endpoint.
+ */
+
+// https://blog.yld.io/2016/11/07/node-js-databases-using-redis-for-fun-and-profit/
 const fs = require('fs');
 const xml2js = require('xml2js');
 
@@ -7,14 +12,27 @@ const builder = new xml2js.Builder();
 const htmlWhiteSpaceRegex = /\r?\n|\r|\s{2,}/g;
 const folder = './kanji/0';
 
+/*
+ * Convert the first character of a string to its hex representation.
+ * convertToHex('a')   -> 61
+ * convertToHex('abc') -> 61
+ * convertToHex('あ')  -> 3042  
+ */ 
 const convertToHex = (character) => {
   return character.charCodeAt(0).toString(16);
 }
 
+/*
+ * Gets the SVG filename of a character (first character of the string).
+ * getSVGFilename('日') -> '65e5.svg'
+ */
 const getSVGFilename = (character) => {
   return convertToHex(character) + '.svg';
 }
 
+/*
+ * This function is used to read the SVG files. Uses the node fs library.
+ */
 const readFileAsync = (filename) => {
   return new Promise((resolve, reject) => {
     if (fs.existsSync(filename)) {
@@ -28,11 +46,15 @@ const readFileAsync = (filename) => {
   });
 }
 
+/*
+ * Compresses XML string a.k.a removing all whitespaces. 
+ */
 const parseXMLResponse = (XMLString) => {
   if (XMLString === '' || XMLString === null) {
     return null;
   }
   let responseXML = '';
+
   // parseString is not Async
   parseString(XMLString, (error, result) => {
     if (error) throw error;
@@ -41,6 +63,9 @@ const parseXMLResponse = (XMLString) => {
   return responseXML;
 }
 
+/*
+ * Wrapper callback to read file.
+ */
 const fetchCharacterSVGData = (filename) => {
   return new Promise((resolve, reject) => {
     readFileAsync(filename)
@@ -49,6 +74,9 @@ const fetchCharacterSVGData = (filename) => {
   });
 }
 
+/*
+ * Main fetcher for svg.
+ */
 const fetchSVG = (key) => {
   // key: 'stroke:日';
   try {
