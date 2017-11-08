@@ -4,6 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "tdd": "npm test -- --watch",
+    "test": "mocha --compilers js:babel-register --require ignore-styles --require ./src/test/index.js \"./src/test/*.test.js\""
   },
   "author": "",
   "license": "ISC",
@@ -19,5 +21,9 @@
     "socket.io": "^2.0.3",
     "twitter": "^1.7.1",
     "xml2js": "^0.4.17"
+  },
+  "devDependencies": {
+    "chai": "^4.1.2",
+    "mocha": "^4.0.1"
   }
 }

@@ -24,13 +24,11 @@ app.set('port', PORT);
 app.use(responseTime());
 app.use(allowCORS);
 
-const server = http.createServer(app).listen(PORT, function() {
-  console.log('Express server listening on port ' + PORT);
-});
-
+// Run the app
+const server = http.createServer(app).listen(PORT);
 
 // Initialize socket-io
 const io = require('socket.io').listen(server);
 const twitterStream = twitterClient.stream('statuses/filter', {
-  locations: '129.484177, 30.923179, 145.985641, 45.799878',
+  locations: '129.484177, 30.923179, 145.985641, 45.799878', // This location is Japan
 }, stream => { twitterStreamHandler(stream, io) });

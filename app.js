@@ -17,8 +17,8 @@ app.set('port', PORT);
 app.use(responseTime());
 app.use(allowCORS);
 
-require('./routes')(app);
+// Get all the routes
+require('./controllers/routes')(app);
 
-app.listen(PORT, function() {
-	console.log('JAMMING PORT: ', app.get('port'));
-});
+// After all the setup, lets finally listen
+app.listen(PORT);

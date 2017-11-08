@@ -1,3 +1,8 @@
+/*
+ * Mongo setup.
+ * The main schema is called kanji. 
+ * Since the API is just a bunch of GET requests and no posts, the "query" is predefined below
+ */ 
 const mongoClient = require('mongodb').MongoClient;
 const mongoURL = 'mongodb://localhost:27017/kanji';
 const mongoMainSchema = 'kanji';
@@ -16,7 +21,8 @@ const operations = {
 
 // Helpers
 const formatMongoResult = (result) => {
-  // If exist delete
+  // result object comes with mongodb's id, typically a hash, the data returned should
+  // not contain any unnecessary data
   delete result._id;
   return JSON.stringify(result) + '\n';
 }

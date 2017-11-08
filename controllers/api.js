@@ -15,12 +15,11 @@ const operations = {
   findstroke: 'findStroke',
 }
 
-// Imports
 const fetchSVG = require('./utils/svg-utils');
 const { checkMongoForValue, formatMongoResult } = require('./utils/mongo-utils');
 
 /*
- * General purpose functions
+ * Sends HTTP response with code.
  */
 const createSendResponse = (response, statusCode=200) => {
   return (result) => {
@@ -28,6 +27,9 @@ const createSendResponse = (response, statusCode=200) => {
   }
 }
 
+/*
+ * Key value storage for quicker lookups. TTL is set at two minutes.
+ */
 const saveToRedis = (key, result) => {
   redisClient.setex(key, timeToLive, result);
 }
@@ -95,12 +97,15 @@ const main = (request, response, key, operation) => {
         }).catch((error) => { throw error });
     }).catch(error => { throw error });
 
+  // Once we have all the data do...
   Promise.all([checkForData])
     .then(() => {
+      // Cache to redis if the data isn't null and send back response
       if (data !== null) {
         saveToRedis(key, data);
         sendSucessfulResponse(data);
       } else {
+        // Or send back an error response
         sendErrorResponse({});
       }
     })
